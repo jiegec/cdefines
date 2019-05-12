@@ -6,7 +6,7 @@ Turn `#define` C codes into Rust constants.
 
 Add to code:
 
-```
+```rust
 extern crate cdefines;
 
 #[cdefines::preprocessor]
@@ -19,7 +19,7 @@ const IOCTL: &str =
 
 It gets translated to:
 
-```
+```rust
 const IOCTL_TCGETS: usize = 0x5401;
 // ...
 enum IOCTL {
@@ -30,4 +30,4 @@ enum IOCTL {
 
 ## What is supported
 
-
+1. Plain hexadecimal integers e.g. `#define A 0x1234`.
