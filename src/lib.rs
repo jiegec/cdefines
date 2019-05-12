@@ -5,6 +5,18 @@ use quote::quote;
 use proc_macro::{TokenStream, TokenTree, Span, Ident, Punct, Spacing, Literal, Group, Delimiter};
 use std::usize;
 
+fn parse_c_const(value: &str) -> usize {
+    if value.starts_with("0x") {
+        usize::from_str_radix(value.trim_start_matches("0x"), 16).unwrap()
+    } else if value.starts_with("0b") {
+        usize::from_str_radix(value.trim_start_matches("0b"), 2).unwrap()
+    } else if value.starts_with("0") {
+        usize::from_str_radix(value.trim_start_matches("0"), 8).unwrap()
+    } else {
+        usize::from_str_radix(value, 10).unwrap()
+    }
+}
+
 #[proc_macro_attribute]
 pub fn preprocessor(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let iters: Vec<TokenTree> = item.into_iter().collect();
@@ -36,7 +48,6 @@ pub fn preprocessor(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     if tokens[0] == "#define" {
                         let name = tokens[1];
                         let value = tokens[2];
-                        let value_usize = usize::from_str_radix(value.trim_start_matches("0x"), 16).unwrap();
 
                         // constants
                         gen_tokens.push(TokenTree::Ident(Ident::new("const", Span::call_site())));
@@ -44,13 +55,13 @@ pub fn preprocessor(_attr: TokenStream, item: TokenStream) -> TokenStream {
                         gen_tokens.push(TokenTree::Punct(Punct::new(':', Spacing::Alone)));
                         gen_tokens.push(TokenTree::Ident(Ident::new("usize", Span::call_site())));
                         gen_tokens.push(TokenTree::Punct(Punct::new('=', Spacing::Alone)));
-                        gen_tokens.push(TokenTree::Literal(Literal::usize_unsuffixed(value_usize)));
+                        gen_tokens.push(TokenTree::Literal(Literal::usize_unsuffixed(parse_c_const(value))));
                         gen_tokens.push(TokenTree::Punct(Punct::new(';', Spacing::Alone)));
 
                         // enum
                         enum_tokens.push(TokenTree::Ident(Ident::new(name, Span::call_site())));
                         enum_tokens.push(TokenTree::Punct(Punct::new('=', Spacing::Alone)));
-                        enum_tokens.push(TokenTree::Literal(Literal::usize_unsuffixed(value_usize)));
+                        enum_tokens.push(TokenTree::Literal(Literal::usize_unsuffixed(parse_c_const(value))));
                         enum_tokens.push(TokenTree::Punct(Punct::new(',', Spacing::Alone)));
                     }
                 }

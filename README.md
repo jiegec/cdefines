@@ -30,4 +30,4 @@ enum IOCTL {
 
 ## What is supported
 
-1. Plain hexadecimal integers e.g. `#define A 0x1234`.
+1. Plain integers(hex, oct, bin, dec) e.g. `#define A 0x1234`.
