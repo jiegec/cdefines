@@ -31,3 +31,4 @@ enum IOCTL {
 ## What is supported
 
 1. Plain integers(hex, oct, bin, dec) e.g. `#define A 0x1234`.
+2. Simple define cascading e.g. `#define A 123` and then `#define B A`.
