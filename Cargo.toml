@@ -3,14 +3,15 @@ name = "cdefines"
 description = "A proc macro that translates c #define constants to rust consts"
 documentation = "https://docs.rs/cdefines"
 homepage = "https://github.com/jiegec/cdefines"
-keywrords = ["transpiler", "c", "proc_macro"]
+repository = "https://github.com/jiegec/cdefines"
+keywords = ["transpiler", "c", "proc_macro"]
 version = "0.1.2"
 authors = ["Jiajie Chen <noc@jiegec.ac.cn>"]
 edition = "2018"
 license = "MIT"
 
 [dependencies]
-quote = "0.6"
+quote = "1.0.7"
 
 [lib]
 proc-macro = true
