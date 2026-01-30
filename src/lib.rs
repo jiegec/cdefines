@@ -43,10 +43,10 @@ pub fn preprocessor(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 data.remove(0);
                 for line in data.split("\n") {
                     let tokens: Vec<&str> = line
-                        .split(|ch| ch == ' ' || ch == '\t')
-                        .filter(|s| s.len() > 0)
+                        .split([' ', '\t'])
+                        .filter(|s| !s.is_empty())
                         .collect();
-                    if tokens.len() == 0 {
+                    if tokens.is_empty() {
                         continue;
                     }
                     if tokens.len() != 3 {
@@ -80,7 +80,7 @@ pub fn preprocessor(_attr: TokenStream, item: TokenStream) -> TokenStream {
                             enum_tokens
                                 .push(TokenTree::Literal(Literal::usize_unsuffixed(value_usize)));
                             enum_tokens.push(TokenTree::Punct(Punct::new(',', Spacing::Alone)));
-                        } else if let Some(_) = mapping.get(value) {
+                        } else if mapping.get(value).is_some() {
                             // #define A ...
                             // #define B A
 
@@ -129,5 +129,5 @@ pub fn preprocessor(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let mut result = TokenStream::new();
     result.extend(gen_tokens);
-    result.into()
+    result
 }
